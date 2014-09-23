@@ -1,9 +1,11 @@
 {
   "name": "shadow-objects",
   "description": "Implements shadow objects which turns plain javascript objects into reactive objects",
-  "homepage": "",
+  "homepage": "https://github.com/cwohlman/meteor-shadow-objects",
   "author": "Joshua Ohlman <codewriterohs@gmail.com>",
   "version": "0.0.1",
-  "git": "",
-  "packages": {}
+  "git": "https://github.com/cwohlman/meteor-shadow-objects.git",
+  "packages": {
+  	"schema": {}
+  }
 }
