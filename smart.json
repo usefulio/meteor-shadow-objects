@@ -1,0 +1,9 @@
+{
+  "name": "shadow-objects",
+  "description": "Implements shadow objects which turns plain javascript objects into reactive objects",
+  "homepage": "",
+  "author": "Joshua Ohlman <codewriterohs@gmail.com>",
+  "version": "0.0.1",
+  "git": "",
+  "packages": {}
+}
