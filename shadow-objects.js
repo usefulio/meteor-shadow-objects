@@ -107,6 +107,8 @@ ShadowObject.object.fn = {
 		
 		var shadow = this.shadow[":" + prop] = new ShadowObject(schema);
 
+		shadow._.parent = self;
+
 		self.__defineGetter__(prop, function () {
 			return shadow._.value();
 		});
@@ -125,7 +127,11 @@ ShadowObject.array = function (schema, shadow) {
 
 	_.each(ShadowObject.array.arrayFunctions, function (prop) {
 		result[prop] = function () {
-			var clone = this._();
+			var self = this;
+			var clone;
+			Deps.nonreactive(function () {
+				clone = self._();
+			});
 			var result = Array.prototype[prop].apply(clone, arguments);
 			this._(clone);
 			return result;
@@ -145,7 +151,7 @@ ShadowObject.array.fn = {
 		return result;
 	}
 	, value: function (val) {
-		if (val) {
+		if (arguments.length) {
 			val = _.isArray(val) ? val : [];
 			this.initElements(val);
 			_.each(val, function (a, i) {

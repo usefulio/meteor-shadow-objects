@@ -232,6 +232,55 @@ Tinytest.add('Shadow Objects - reactivity - array is reactive', function (test) 
 	test.equal(autoRunCount, 3);
 });
 
+Tinytest.add('Shadow Objects - reactivity - setters do not create circular dependencies', function (test) {
+	var item;
+	var employees;
+	var counter = 0;
+	// each element is a function which calls a setter,
+	// if the setter does not create a circular dependency, the autorun will not
+	// be called again.
+	_.each([
+		function () {item = new ShadowObject(bankSchema, {employees: [{}]});}
+		, function () {employees = item.employees;}
+		, function () {item._({});}
+		, function () {item._({routingNumber: counter++});}
+		, function () {item.routingNumber = counter++;}
+		, function () {item.employees = [];}
+		, function () {item.employees = [{name: counter++}];}
+		, function () {item.employees[0].name = counter++;}
+		// we can't avoid these two being reactive without
+		// loosing the reactivity of the employees array when it is 
+		// accessed directly (ie item.employees.forEach() etc.)
+		// , function () {item.employees.push({});}
+		// , function () {item.employees.push({name: counter++});}
+		// we still want the push method to be non-reactive:
+		, function () {employees.push({});}
+		, function () {employees.push({name: counter++});}
+		, function () {item.safe = {};}
+		, function () {item.safe = {combination: counter++};}
+		, function () {item.safe.combination = counter++;}
+		], function (fn) {
+			var depCount = 0;
+			Deps.autorun(function () {
+				if (depCount < 5) {
+					fn();
+				}
+				depCount++;
+			});
+
+			Deps.flush();
+
+			fn();
+
+			Deps.flush();
+
+			test.equal(depCount, 1);			
+		});
+
+
+
+});
+
 Tinytest.add('Shadow Objects - extensibility - shadow is extensible', function (test) {
 	ShadowObject.shadow.fn.helper2 = function () {
 		return this.self.x;
