@@ -107,6 +107,14 @@ Tinytest.add('Shadow Objects - basic api - array with properties', function (tes
 	item._(["Peter", "William"]);
 	test.equal(item.length, 2);
 	test.equal(item[0], "Peter");
+
+	item._(["Peter"]);
+	test.equal(item.length, 1);
+	test.equal(item[0], "Peter");
+
+	item.pop();
+	test.equal(item.length, 0);
+	test.equal(item[0], undefined);
 });
 Tinytest.add('Shadow Objects - basic api - array with objects', function (test) {
 	var item = new ShadowObject(peopleSchema);
@@ -229,7 +237,15 @@ Tinytest.add('Shadow Objects - reactivity - array is reactive', function (test) 
 
 	Deps.flush();
 
-	test.equal(autoRunCount, 3);
+	nextValue = 1;
+	item._([{}]);
+	Deps.flush();
+
+	nextValue = 0;
+	item.pop();
+	Deps.flush();
+
+	test.equal(autoRunCount, 5);
 });
 
 Tinytest.add('Shadow Objects - reactivity - setters do not create circular dependencies', function (test) {
@@ -250,7 +266,9 @@ Tinytest.add('Shadow Objects - reactivity - setters do not create circular depen
 		, function () {item.employees[0].name = counter++;}
 		// we can't avoid these two being reactive without
 		// loosing the reactivity of the employees array when it is 
-		// accessed directly (ie item.employees.forEach() etc.)
+		// accessed directly (in other words we can't tell the difference
+		// between item.employees.forEach() and item.employees.push because they
+		// both access the employees property of item)
 		// , function () {item.employees.push({});}
 		// , function () {item.employees.push({name: counter++});}
 		// we still want the push method to be non-reactive:

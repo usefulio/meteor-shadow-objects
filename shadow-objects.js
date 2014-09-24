@@ -153,7 +153,11 @@ ShadowObject.array.fn = {
 	, value: function (val) {
 		if (arguments.length) {
 			val = _.isArray(val) ? val : [];
+
+			// initialize any missing getters and setters;
 			this.initElements(val);
+
+			// transfer the properties over
 			_.each(val, function (a, i) {
 				this.self[i] = a;
 			}, this);
@@ -163,6 +167,13 @@ ShadowObject.array.fn = {
 		}
 	}
 	, initElements: function (val) {
+		if (val.length < this.self.length) {
+			// truncate the array to the length of the new array
+			this.self.length = val.length;
+			if (this.properties) this.properties.length = val.length;
+
+			this.dep.changed();
+		}
 		_.each(val || this.shadow, function (a, i) {
 			if (!_.contains(this.properties, i)) {
 				this.addProperty(this.self, i, this.childSchema);
