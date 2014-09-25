@@ -90,7 +90,7 @@ ShadowObject.object.fn = {
 	clone: function () {
 		var result = {};
 		_.each(this.properties, function (prop) {
-			result[prop] = this.shadow[":" + prop]._();
+			result[prop] = this.shadow[prop]._();
 		}, this);
 		return result;
 	}
@@ -111,7 +111,7 @@ ShadowObject.object.fn = {
 
 		this.properties.push(prop);
 		
-		var shadow = this.shadow[":" + prop] = new ShadowObject(schema, original || (this.original || {})[prop]);
+		var shadow = this.shadow[prop] = new ShadowObject(schema, original || (this.original || {})[prop]);
 
 		shadow._.parent = self;
 		// shadow._.root = self._.root || self._;
@@ -125,7 +125,7 @@ ShadowObject.object.fn = {
 	}
 	, hasChanges: function () {
 		return _.any(this.properties, function (prop) {
-			return this.shadow[":" + prop]._.hasChanges();
+			return this.shadow[prop]._.hasChanges();
 		}, this);
 	}
 };
@@ -158,7 +158,7 @@ ShadowObject.array.fn = {
 		var result = [];
 		this.dep.depend();
 		_.each(this.properties, function (prop) {
-			result[prop] = this.shadow[":" + prop]._();
+			result[prop] = this.shadow[prop]._();
 		}, this);
 		return result;
 	}

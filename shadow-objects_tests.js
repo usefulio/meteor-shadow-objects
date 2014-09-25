@@ -149,14 +149,14 @@ Tinytest.add('Shadow Objects - static helpers - object.original', function (test
 	var item = new ShadowObject(personSchema, {name:"original"});
 
 	test.equal(item._.original.name, "original");
-	test.equal(item._.shadow[":name"]._.original, "original");
+	test.equal(item._.shadow["name"]._.original, "original");
 });
 
 Tinytest.add('Shadow Objects - static helpers - array.original', function (test) {
 	var item = new ShadowObject(namesSchema, ["original"]);
 
 	test.equal(item._.original[0], "original");
-	test.equal(item._.shadow[":0"]._.original, "original");
+	test.equal(item._.shadow["0"]._.original, "original");
 });
 
 Tinytest.add('Shadow Objects - static helpers - deep.original', function (test) {
@@ -173,8 +173,8 @@ Tinytest.add('Shadow Objects - static helpers - deep.original', function (test) 
 
 	test.equal(item._.original.employees[0].name, "original");
 	test.equal(item._.original.safe.combination, "original");
-	test.equal(item.employees[0]._.shadow[":name"]._.original, "original");
-	test.equal(item.safe._.shadow[":combination"]._.original, "original");
+	test.equal(item.employees[0]._.shadow["name"]._.original, "original");
+	test.equal(item.safe._.shadow["combination"]._.original, "original");
 });
 
 Tinytest.add('Shadow Objects - static helpers - undefined.original', function (test) {
@@ -183,7 +183,7 @@ Tinytest.add('Shadow Objects - static helpers - undefined.original', function (t
 	// test.equal(item._.original.employees[0].name, "original");
 	// test.equal(item._.original.safe.combination, "original");
 	test.equal(item.employees._.original, undefined);
-	test.equal(item.safe._.shadow[":combination"]._.original, undefined);
+	test.equal(item.safe._.shadow["combination"]._.original, undefined);
 });
 
 // XXX write tests for schema
@@ -212,7 +212,7 @@ Tinytest.add('Shadow Objects - helpers - array.hasChanges', function (test) {
 	var item = new ShadowObject(namesSchema, ["original"]);
 
 	test.isFalse(item._.hasChanges());
-	
+
 	item[0] = 'new';
 
 	test.isTrue(item._.hasChanges());
