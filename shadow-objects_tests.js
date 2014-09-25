@@ -139,6 +139,116 @@ Tinytest.add('Shadow Objects - basic api - array with objects', function (test) 
 	test.equal(oldVal.name, undefined);
 });
 
+Tinytest.add('Shadow Objects - static helpers - item.original', function (test) {
+	var item = new ShadowObject(itemSchema, "original");
+
+	test.equal(item._.original, "original");
+});
+
+Tinytest.add('Shadow Objects - static helpers - object.original', function (test) {
+	var item = new ShadowObject(personSchema, {name:"original"});
+
+	test.equal(item._.original.name, "original");
+	test.equal(item._.shadow[":name"]._.original, "original");
+});
+
+Tinytest.add('Shadow Objects - static helpers - array.original', function (test) {
+	var item = new ShadowObject(namesSchema, ["original"]);
+
+	test.equal(item._.original[0], "original");
+	test.equal(item._.shadow[":0"]._.original, "original");
+});
+
+Tinytest.add('Shadow Objects - static helpers - deep.original', function (test) {
+	var item = new ShadowObject(bankSchema, {
+		employees: [
+			{
+				name: 'original'
+			}
+		]
+		, safe: {
+			combination: 'original'
+		}
+	});
+
+	test.equal(item._.original.employees[0].name, "original");
+	test.equal(item._.original.safe.combination, "original");
+	test.equal(item.employees[0]._.shadow[":name"]._.original, "original");
+	test.equal(item.safe._.shadow[":combination"]._.original, "original");
+});
+
+Tinytest.add('Shadow Objects - static helpers - undefined.original', function (test) {
+	var item = new ShadowObject(bankSchema, null);
+
+	// test.equal(item._.original.employees[0].name, "original");
+	// test.equal(item._.original.safe.combination, "original");
+	test.equal(item.employees._.original, undefined);
+	test.equal(item.safe._.shadow[":combination"]._.original, undefined);
+});
+
+// XXX write tests for schema
+
+Tinytest.add('Shadow Objects - helpers - item.hasChanges', function (test) {
+	var item = new ShadowObject(itemSchema, "original");
+
+	test.isFalse(item._.hasChanges());
+
+	item._('new');
+
+	test.isTrue(item._.hasChanges());
+});
+
+Tinytest.add('Shadow Objects - helpers - object.hasChanges', function (test) {
+	var item = new ShadowObject(personSchema, {name:"original"});
+
+	test.isFalse(item._.hasChanges());
+
+	item.name = 'new';
+
+	test.isTrue(item._.hasChanges());
+});
+
+Tinytest.add('Shadow Objects - helpers - array.hasChanges', function (test) {
+	var item = new ShadowObject(namesSchema, ["original"]);
+
+	test.isFalse(item._.hasChanges());
+	
+	item[0] = 'new';
+
+	test.isTrue(item._.hasChanges());
+});
+
+Tinytest.add('Shadow Objects - helpers - deep.hasChanges', function (test) {
+	var item = new ShadowObject(bankSchema, {
+		employees: [
+			{
+				name: 'original'
+			}
+		]
+		, safe: {
+			combination: 'original'
+		}
+	});
+
+	test.isFalse(item._.hasChanges());
+
+	item.employees[0].name = 'new';
+
+	test.isTrue(item._.hasChanges());
+});
+
+Tinytest.add('Shadow Objects - helpers - undefined.hasChanges', function (test) {
+	var item = new ShadowObject(bankSchema);
+
+	test.isFalse(item._.hasChanges());
+
+	item.employees.push({});
+
+	test.isTrue(item._.hasChanges());
+});
+
+// XXX write reactivity tests for hasChanges
+
 Tinytest.add('Shadow Objects - reactivity - property is reactive', function (test) {
 	var item = new ShadowObject(itemSchema)
 		, nextValue

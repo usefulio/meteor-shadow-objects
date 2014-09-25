@@ -25,7 +25,9 @@ ShadowObject = function (schema, original) {
 	result._ = shadow;
 	shadow.self = result;
 
-	result._(original);
+	Deps.nonreactive(function () {
+		result._(original);
+	});
 
 	return result;
 };
@@ -69,13 +71,17 @@ ShadowObject.property.fn = {
 			return this.self.get();
 		}
 	}
+	, hasChanges: function () {
+		return this.self.get() != this.original;
+	}
 };
 
 // this is a constructor and returns the core value 
-ShadowObject.object = function (schema, shadow) {
+ShadowObject.object = function (schema, shadow, original) {
 	var result = {};
+	original = original || {};
 	_.each(schema.schema, function (schema, prop) {
-		this.addProperty(result, prop, schema);
+		this.addProperty(result, prop, schema, original[prop]);
 	}, shadow);
 	return result;
 };
@@ -98,16 +104,17 @@ ShadowObject.object.fn = {
 			return this.self;
 		}
 	}
-	, addProperty: function (self, prop, schema) {
+	, addProperty: function (self, prop, schema, original) {
 		// Lazily instantiate the necessary properties
 		this.shadow = this.shadow || {};
 		this.properties = this.properties || [];
 
 		this.properties.push(prop);
 		
-		var shadow = this.shadow[":" + prop] = new ShadowObject(schema);
+		var shadow = this.shadow[":" + prop] = new ShadowObject(schema, original || (this.original || {})[prop]);
 
 		shadow._.parent = self;
+		// shadow._.root = self._.root || self._;
 
 		self.__defineGetter__(prop, function () {
 			return shadow._.value();
@@ -116,9 +123,14 @@ ShadowObject.object.fn = {
 			shadow._.value(val);
 		});
 	}
+	, hasChanges: function () {
+		return _.any(this.properties, function (prop) {
+			return this.shadow[":" + prop]._.hasChanges();
+		}, this);
+	}
 };
 
-ShadowObject.array = function (schema, shadow) {
+ShadowObject.array = function (schema, shadow, original) {
 	result = [];
 
 	shadow.dep = new Deps.Dependency();
@@ -183,6 +195,10 @@ ShadowObject.array.fn = {
 	, addProperty: function () {
 		this.dep.changed();
 		ShadowObject.object.fn.addProperty.apply(this, arguments);
+	}
+	, hasChanges: function () {
+		this.dep.depend();
+		return ShadowObject.object.fn.hasChanges.apply(this, arguments) || (this.self.length != (this.original || []).length);
 	}
 };
 
