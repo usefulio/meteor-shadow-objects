@@ -247,6 +247,8 @@ Tinytest.add('Shadow Objects - helpers - undefined.hasChanges', function (test) 
 	test.isTrue(item._.hasChanges());
 });
 
+// XXX write tests for root
+
 // XXX write reactivity tests for hasChanges
 
 Tinytest.add('Shadow Objects - reactivity - property is reactive', function (test) {

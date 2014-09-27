@@ -3,7 +3,7 @@ Package.describe({
 });
 
 Package.on_use(function (api, where) {
-  api.use(['schema', 'reactive-var']);
+  api.use(['schema', 'reactive-var', 'ui']);
 
   api.add_files('shadow-objects.js', ['client', 'server']);
 

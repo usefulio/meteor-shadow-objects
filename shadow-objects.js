@@ -54,6 +54,13 @@ ShadowObject.shadow.fn = {
 	, match: function () {
 		return this.schema.match(this.self._());
 	}
+	, root: function () {
+		var parent = this;
+		while (parent.parent) {
+			parent = parent.parent._;
+		}
+		return parent.self;
+	}
 };
 
 ShadowObject.property = function (schema, shadow) {
@@ -211,4 +218,10 @@ ShadowObject.array.arrayFunctions = [
 	, "splice"
 	, "unshift"
 ];
+
+if (Meteor.isClient) {
+	UI.registerHelper('_', function () {
+		return this._;
+	});
+}
 
