@@ -61,13 +61,17 @@ ShadowObject.shadow.fn = {
 		}
 		return parent.self;
 	}
-	, reset: function (original) {
+	, resetOriginal: function (original) {
+		// allow for no arguments to signal reseting the object to it's original state
+		if (!arguments.length) {
+			original = this.original;
+		}
 		this.original = original;
 		// in case original is null or undefined
 		original = original || {};
 		if (this.properties) {
 			_.each(this.properties, function (prop) {
-				this.shadow[prop]._.reset(original[prop]);
+				this.shadow[prop]._.resetOriginal(original[prop]);
 			}, this);
 		}
 		this.value(original);

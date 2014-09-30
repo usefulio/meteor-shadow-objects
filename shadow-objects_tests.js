@@ -281,7 +281,7 @@ Tinytest.add('Shadow Objects - helpers - reset', function (test) {
 			combination: 'new'
 		}
 	};
-	item._.reset(newItem);
+	item._.resetOriginal(newItem);
 
 	test.equal(item._.original, newItem);
 	test.equal(item.employees._.original.length, 2);
