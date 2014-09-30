@@ -61,6 +61,17 @@ ShadowObject.shadow.fn = {
 		}
 		return parent.self;
 	}
+	, reset: function (original) {
+		this.original = original;
+		// in case original is null or undefined
+		original = original || {};
+		if (this.properties) {
+			_.each(this.properties, function (prop) {
+				this.shadow[prop]._.reset(original[prop]);
+			}, this);
+		}
+		this.value(original);
+	}
 };
 
 ShadowObject.property = function (schema, shadow) {

@@ -247,7 +247,51 @@ Tinytest.add('Shadow Objects - helpers - undefined.hasChanges', function (test) 
 	test.isTrue(item._.hasChanges());
 });
 
-// XXX write tests for root
+Tinytest.add('Shadow Objects - helpers - root', function (test) {
+	var item = new ShadowObject(bankSchema);
+
+	test.equal(item._.root(), item);
+	test.equal(item.employees._.root(), item);
+	test.equal(item.safe._.root(), item);
+	test.equal(item.safe._.shadow.combination._.root(), item);
+});
+
+Tinytest.add('Shadow Objects - helpers - reset', function (test) {
+	var item = new ShadowObject(bankSchema, {
+		employees: [
+			{
+				name: 'original'
+			}
+		]
+		, safe: {
+			combination: 'original'
+		}
+	});
+
+	var newItem = {
+		employees: [
+			{
+				name: 'new'
+			}
+			, {
+				name: 'new'
+			}
+		]
+		, safe: {
+			combination: 'new'
+		}
+	};
+	item._.reset(newItem);
+
+	test.equal(item._.original, newItem);
+	test.equal(item.employees._.original.length, 2);
+	test.equal(item.employees.length, 2);
+	test.equal(item.employees[0]._.original.name, 'new');
+	test.equal(item.employees[0].name, 'new');
+	test.equal(item.safe._.original.combination, 'new');
+	test.equal(item.safe.combination, 'new');
+
+});
 
 // XXX write reactivity tests for hasChanges
 
