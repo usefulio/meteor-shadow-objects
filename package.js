@@ -9,7 +9,7 @@ Package.describe({
 Package.on_use(function (api, where) {
   api.versionsFrom("0.9.0");
   
-  api.use(['cwohlman:schema@0.1.0', 'reactive-var', 'ui']);
+  api.use(['cwohlman:schema@0.1.0', 'reactive-var@1.0.2', 'ui']);
 
   api.add_files('shadow-objects.js', ['client', 'server']);
 
