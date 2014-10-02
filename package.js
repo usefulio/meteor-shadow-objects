@@ -1,5 +1,5 @@
 Package.describe({
-  summary: "Implements 'shadow objects', objects which mimic plain javascript objects but which have reactive properties."
+  summary: "Reactive objects using getters and setters."
   , name: "cwohlman:shadow-objects"
   , version: "0.1.0"
   , git: "https://github.com/cwohlman/meteor-shadow-objects.git"
