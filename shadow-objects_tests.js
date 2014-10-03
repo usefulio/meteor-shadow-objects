@@ -104,13 +104,14 @@ Tinytest.add('Shadow Objects - basic api - array with properties', function (tes
 	test.equal(item.length, 1);
 	test.equal(item[0], "George");
 
-	item._(["Peter", "William"]);
-	test.equal(item.length, 2);
+	item._(["Peter", "William", "George"]);
+	test.equal(item.length, 3);
 	test.equal(item[0], "Peter");
 
 	item._(["Peter"]);
 	test.equal(item.length, 1);
 	test.equal(item[0], "Peter");
+	test.equal(item[1], undefined);
 
 	item.pop();
 	test.equal(item.length, 0);

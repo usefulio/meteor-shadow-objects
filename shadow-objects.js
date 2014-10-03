@@ -215,13 +215,15 @@ ShadowObject.array.fn = {
 		}
 	}
 	, initElements: function (val) {
-		if (val.length < this.self.length) {
-			// truncate the array to the length of the new array
-			this.self.length = val.length;
-			if (this.properties) this.properties.length = val.length;
-
-			this.dep.changed();
-		}
+		_.each(this.self, function (a, i) {
+			if (i >= val.length) {
+				this.self.length = val.length;
+				this.properties.length = val.length;
+				delete this.self[i];
+				delete this.properties[i];
+				this.dep.changed();
+			}
+		}, this);
 		_.each(val || this.shadow, function (a, i) {
 			if (!_.contains(this.properties, i)) {
 				this.addProperty(this.self, i, this.childSchema);
