@@ -138,11 +138,16 @@ ShadowObject.object.fn = {
 		shadow._.parent = self;
 		// shadow._.root = self._.root || self._;
 
-		self.__defineGetter__(prop, function () {
-			return shadow._.value();
-		});
-		self.__defineSetter__(prop, function (val) {
-			shadow._.value(val);
+		Object.defineProperty(self, prop, {
+			// allows array elements to be deleted
+			configurable: true
+			, enumerable: true
+			, get: function () {
+				return shadow._.value();
+			}
+			, set: function (val) {
+				shadow._.value(val);
+			}
 		});
 	}
 	, hasChanges: function () {
