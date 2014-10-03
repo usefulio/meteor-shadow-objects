@@ -208,6 +208,17 @@ Tinytest.add('Shadow Objects - helpers - object.hasChanges', function (test) {
 	test.isTrue(item._.hasChanges());
 });
 
+Tinytest.add('Shadow Objects - helpers - object.changes', function (test) {
+	var item = new ShadowObject(personSchema, {name:"original"});
+
+	test.equal(_.keys(item._.changes()).length, 0);
+
+	item.name = 'new';
+
+	test.equal(_.keys(item._.changes()).length, 1);
+	test.equal(item._.changes().name, 'new');
+});
+
 Tinytest.add('Shadow Objects - helpers - array.hasChanges', function (test) {
 	var item = new ShadowObject(namesSchema, ["original"]);
 

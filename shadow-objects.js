@@ -155,6 +155,15 @@ ShadowObject.object.fn = {
 			return this.shadow[prop]._.hasChanges();
 		}, this);
 	}
+	, changes: function () {
+		var result = {};
+		_.each(this.properties, function (prop) {
+			if (this.shadow[prop]._.hasChanges()) {
+				result[prop] = this.shadow[prop]._();
+			}
+		}, this);
+		return result;
+	}
 };
 
 ShadowObject.array = function (schema, shadow, original) {
