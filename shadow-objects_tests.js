@@ -17,6 +17,9 @@ var bankSchema = {
 			isArray: true
 			, schema: personSchema.schema
 		}
+		, items: {
+			isArray: true
+		}
 		, safe: {
 			combination: []
 		}
@@ -445,6 +448,8 @@ Tinytest.add('Shadow Objects - reactivity - setters do not create circular depen
 		, function () {item.safe = {};}
 		, function () {item.safe = {combination: counter++};}
 		, function () {item.safe.combination = counter++;}
+		, function () {item._.resetOriginal({safe: {combination: counter++}});}
+		, function () {item._.resetOriginal({items: [{name: counter++}]});}
 		], function (fn) {
 			var depCount = 0;
 			Deps.autorun(function () {

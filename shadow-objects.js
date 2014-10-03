@@ -215,7 +215,7 @@ ShadowObject.array.fn = {
 		}
 	}
 	, initElements: function (val) {
-		_.each(this.self, function (a, i) {
+		_.each(this.properties, function (i) {
 			if (i >= val.length) {
 				this.self.length = val.length;
 				this.properties.length = val.length;
