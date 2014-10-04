@@ -334,6 +334,30 @@ Tinytest.add('Shadow Objects - reactivity - property is reactive', function (tes
 
 	test.equal(autoRunCount, 3);
 });
+Tinytest.add('Shadow Objects - reactivity - property does not trigger changed for dates', function (test) {
+	var item = new ShadowObject(itemSchema)
+		, nextValue
+		, autoRunCount = 0;
+
+	var comp = Deps.autorun(function () {
+		autoRunCount++;
+		test.equal(item._(), nextValue);
+	});
+
+	Deps.flush();
+
+	nextValue = new Date();
+	item._(nextValue);
+
+	Deps.flush();
+
+	nextValue = new Date(nextValue.valueOf());
+	item._.value(nextValue);
+
+	Deps.flush();
+
+	test.equal(autoRunCount, 2);
+});
 Tinytest.add('Shadow Objects - reactivity - object is reactive', function (test) {
 	var item = new ShadowObject(personSchema)
 		, nextValue

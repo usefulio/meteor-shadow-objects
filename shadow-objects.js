@@ -79,7 +79,7 @@ ShadowObject.shadow.fn = {
 };
 
 ShadowObject.property = function (schema, shadow) {
-	return new ReactiveVar();
+	return new ReactiveVar(undefined, _.isEqual);
 };
 
 ShadowObject.property.fn = {
