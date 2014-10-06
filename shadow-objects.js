@@ -94,7 +94,7 @@ ShadowObject.property.fn = {
 		}
 	}
 	, hasChanges: function () {
-		return this.self.get() != this.original;
+		return !_.isEqual(this.self.get(), this.original);
 	}
 };
 
