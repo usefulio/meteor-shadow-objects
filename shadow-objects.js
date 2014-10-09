@@ -49,7 +49,7 @@ ShadowObject.shadow.fn = {
 		return this.schema.check(this.self._());
 	}
 	, errors: function () {
-		return this.schema.errors(this.self._());
+		return this.schema.errors(this.self._(), null, []);
 	}
 	, match: function () {
 		return this.schema.match(this.self._());
