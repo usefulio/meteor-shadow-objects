@@ -1,7 +1,7 @@
 Package.describe({
   summary: "Reactive objects using getters and setters."
   , name: "cwohlman:shadow-objects"
-  , version: "0.1.1"
+  , version: "0.1.2"
   , git: "https://github.com/cwohlman/meteor-shadow-objects.git"
   , 
 });
