@@ -46,13 +46,13 @@ ShadowObject.shadow = function () {
 // to the _ property of the newly created shadow object
 ShadowObject.shadow.fn = {
 	check: function () {
-		return this.schema.check(this.self._());
+		return this.schema.check(this.self._(), this.root());
 	}
 	, errors: function () {
-		return this.schema.errors(this.self._(), null, []);
+		return this.schema.errors(this.self._(), this.root(), []);
 	}
 	, match: function () {
-		return this.schema.match(this.self._());
+		return this.schema.match(this.self._(), this.root());
 	}
 	, root: function () {
 		var parent = this;
@@ -98,7 +98,7 @@ ShadowObject.property.fn = {
 	}
 };
 
-// this is a constructor and returns the core value 
+// this is a constructor and returns the core value
 ShadowObject.object = function (schema, shadow, original) {
 	var result = {};
 	original = original || {};
@@ -132,7 +132,7 @@ ShadowObject.object.fn = {
 		this.properties = this.properties || [];
 
 		this.properties.push(prop);
-		
+
 		var shadow = this.shadow[prop] = new ShadowObject(schema, original || (this.original || {})[prop]);
 
 		shadow._.parent = self;
@@ -255,4 +255,3 @@ if (Meteor.isClient) {
 		return this._;
 	});
 }
-

@@ -460,7 +460,7 @@ Tinytest.add('Shadow Objects - reactivity - setters do not create circular depen
 		, function () {item.employees = [{name: counter++}];}
 		, function () {item.employees[0].name = counter++;}
 		// we can't avoid these two being reactive without
-		// loosing the reactivity of the employees array when it is 
+		// loosing the reactivity of the employees array when it is
 		// accessed directly (in other words we can't tell the difference
 		// between item.employees.forEach() and item.employees.push because they
 		// both access the employees property of item)
@@ -489,7 +489,7 @@ Tinytest.add('Shadow Objects - reactivity - setters do not create circular depen
 
 			Deps.flush();
 
-			test.equal(depCount, 1);			
+			test.equal(depCount, 1);
 		});
 
 
@@ -543,4 +543,25 @@ Tinytest.add('Shadow Objects - schema helpers - match helper', function (test) {
 	var item = new ShadowObject(personSchema);
 	test.equal(item._.match(), false);
 
+});
+
+Tinytest.add('Shadow Objects - schema helpers - passes root context', function (test) {
+	var item = new ShadowObject({
+		schema: {
+			name: function (val) {return this.name === 'joe' && val === 'joe';}
+			, item: {
+				name: function (val) {return this.name === 'joe' && this.item.name === 'sam' && val === 'sam';}
+			}
+		}
+	});
+	item._({
+		name: 'joe'
+		, item: {
+			name: 'sam'
+		}
+	});
+	test.equal(item._.match(), true);
+	test.equal(item.item._.match(), true);
+	test.equal(item.item._.errors().length, 0);
+	item.item._.check();
 });
